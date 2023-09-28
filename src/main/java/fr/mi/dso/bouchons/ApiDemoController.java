@@ -3,8 +3,9 @@ package fr.mi.dso.bouchons;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ApiDemoController {
 
-    JavaMailSenderImpl sender = new JavaMailSenderImpl();
+    @Autowired
+    private JavaMailSender sender;
 
     @GetMapping("/mails")
     public String bouchonMail(@RequestHeader Map<String, String> headers) {
