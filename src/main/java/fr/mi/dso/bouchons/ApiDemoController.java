@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ApiDemoController {
 
-    JavaMailSenderImpl sender = new JavaMailSenderImpl();
+    @Autowired
+    private JavaMailSender sender;
 
     @GetMapping("/mails")
     public String bouchonMail(@RequestHeader Map<String, String> headers) {
