@@ -1,6 +1,7 @@
 package fr.mi.dso.bouchons;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -21,7 +22,13 @@ public class ApiDemoController {
         String subject = "Mail de test";
         String content = " Header from Mellon :\n";
 
-        content += "Mellon-NameID : " + headers.get("Mellon-NameID") + "\n";
+        System.out.println(" HEADERS ");
+        for (Entry<String, String> entry : headers.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
+        System.out.println(" END HEADERS ");
+
+        content += "Mellon-NameID : " + headers.get("Mellon-NameiD") + "\n";
         content += "Mellon-Groups : " + headers.get("Mellon-Groups") + "\n";
         content += "Mellon-Role : " + headers.get("Mellon-Role") + "\n";
 
