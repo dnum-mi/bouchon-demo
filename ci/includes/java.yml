@@ -1,0 +1,45 @@
+variables:
+  SONAR_SCANNER_EXTRA_ARGS: ''
+  SONAR_PROJECT_KEY: ${PROJECT_PATH}-${CI_PROJECT_NAME}
+  SONAR_PROJECT_VERSION: ${CI_COMMIT_REF_NAME}
+  SONAR_WAIT_QUALITY_GATE: 'true'
+
+.java:build:
+  image:
+    name: ${BUILD_IMAGE_NAME}
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - .m2/repository/
+  script:
+    - cd $WORKING_DIR
+    - echo ${PROJECT_PATH}
+    - >
+      mvn $MAVEN_CLI_OPTS -Dmaven.wagon.http.ssl.insecure=true --no-transfer-progress clean package -s $MVN_CONFIG_FILE
+      -DaltReleaseDeploymentRepository=nexus::default::${NEXUS_HOST_URL}/repository/${PROJECT_PATH}-repository-release/
+      -DaltSnapshotDeploymentRepository=nexus::default::${NEXUS_HOST_URL}/repository/${PROJECT_PATH}-repository-snapshot/
+  artifacts:
+    paths:
+      - ${ARTEFACT_DIR}
+    expire_in: 1 seconds
+  interruptible: true
+
+.java:sonar:
+  image:
+    name: ${BUILD_IMAGE_NAME}
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - .m2/repository/
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - cd $WORKING_DIR
+    - >
+      mvn $MAVEN_CLI_OPTS -Dmaven.wagon.http.ssl.insecure=true --no-transfer-progress -s $MVN_CONFIG_FILE
+      clean org.jacoco:jacoco-maven-plugin:prepare-agent package test jacoco:report sonar:sonar
+      -Dsonar.login=$SONAR_TOKEN -Dsonar.qualitygate.wait=${SONAR_WAIT_QUALITY_GATE}
+      -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.projectVersion=${SONAR_PROJECT_VERSION} $SONAR_SCANNER_EXTRA_ARGS
+      -DaltReleaseDeploymentRepository=nexus::default::${NEXUS_HOST_URL}/repository/${PROJECT_PATH}-repository-release/
+      -DaltSnapshotDeploymentRepository=nexus::default::${NEXUS_HOST_URL}/repository/${PROJECT_PATH}-repository-snapshot/
+  allow_failure: true
