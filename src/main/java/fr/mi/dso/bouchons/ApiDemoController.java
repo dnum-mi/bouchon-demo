@@ -17,13 +17,13 @@ public class ApiDemoController {
     private JavaMailSender sender;
 
     @GetMapping("/mails")
-    public String bouchonMail(@RequestHeader Map<String, String> headers) {
+    public String bouchonMail(@RequestHeader Map<String, String> headers, @RequestHeader("Mellon-Role") String role) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("mon-app@interieur-numerique.com");
         message.setTo("p.leclainche@actongroup.com");
         String subject = "Mail de test";
         String content = " Header from Mellon :\n";
-
+        System.out.println(" HEADER ROLE is " + role);
         System.out.println(" HEADERS ");
         for (Entry<String, String> entry : headers.entrySet()) {
             System.out.println(entry.getKey() + " : " + entry.getValue());
