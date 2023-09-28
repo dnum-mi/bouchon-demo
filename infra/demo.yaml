@@ -19,6 +19,11 @@ spec:
       containers:
         - image: harbor.apps.c6.numerique-interieur.com/mi-demo/mail-demo:1.0.0
           imagePullPolicy: Always
+          env:
+            - name: SPRING_MAIL_HOST
+              value: "mi-demo-bouchons-dev-smtp-dso-chart-ovh"
+            - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_PORT
+              value: "1025"
           resources:
             requests:
               memory: "64Mi"
