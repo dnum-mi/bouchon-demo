@@ -30,9 +30,9 @@ public class ApiDemoController {
         }
         System.out.println(" END HEADERS ");
 
-        content += "Mellon-NameID : " + headers.get("Mellon-NameiD") + "\n";
-        content += "Mellon-Groups : " + headers.get("Mellon-Groups") + "\n";
-        content += "Mellon-Role : " + headers.get("Mellon-Role") + "\n";
+        content += "Mellon-NameID : " + headers.get("mellon-nameid") + "\n";
+        content += "Mellon-Groups : " + headers.get("mellon-groups") + "\n";
+        content += "Mellon-Role : " + headers.get("mellon-role") + "\n";
 
         message.setSubject(subject);
         message.setText(content);
